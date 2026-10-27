@@ -23,7 +23,7 @@ class Settings(BaseSettings):
     BACKEND_URL: str = "http://localhost:8000"
 
     # Database - standard location in backend directory
-    DATABASE_URL: str = "sqlite:///c:/Personal/CareSync/backend/caresync.db"
+    DATABASE_URL: str = "sqlite:///./caresync.db"
 
     # Session / JWT
     SESSION_SECRET: str = secrets.token_urlsafe(32)

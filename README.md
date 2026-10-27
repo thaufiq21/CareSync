@@ -129,7 +129,11 @@ npm run build
 
 ## Deployment
 
-No hosted deployment URL or deployment configuration is included in this repository. The app currently provides local development instructions only. Any deployment will need environment-specific frontend/API origins, secure production secrets, persistent database configuration, and a security and privacy review.
+The root `render.yaml` defines a Render Blueprint for one web service and a PostgreSQL database. The Dockerfile builds the React frontend and serves it from FastAPI on the same origin. The Blueprint sets production mode, generates a session secret, and connects the app to PostgreSQL. The backend still uses SQLite by default for local development.
+
+To deploy, push the repository to GitHub and open Render's **New Blueprint** flow for this repository. Review the listed resources and apply the Blueprint. The web service uses `/health` for readiness checks and `.python-version` documents Python 3.12 for non-Docker development.
+
+This repository is a portfolio/demo project. A free Render Postgres database expires after 30 days, so treat any data entered into a free deployment as temporary. Do not enter real patient or health information. Render's free web services may also spin down when idle.
 
 ## Team and project context
 

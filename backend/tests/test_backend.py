@@ -36,21 +36,21 @@ def setup_test_db():
     with TestingSessionLocal() as session:
         admin = User(
             name="Test Admin",
-            email="admin@test.local",
+            email="admin@example.com",
             password_hash=hash_password("Admin@12345"),
             role=UserRole.admin,
             is_active=True,
         )
         staff = User(
             name="Test Staff",
-            email="staff@test.local",
+            email="staff@example.com",
             password_hash=hash_password("Staff@12345"),
             role=UserRole.staff,
             is_active=True,
         )
         patient = User(
             name="Test Patient",
-            email="patient@test.local",
+            email="patient@example.com",
             password_hash=hash_password("Patient@12345"),
             role=UserRole.patient,
             is_active=True,
@@ -76,14 +76,14 @@ def test_health_check(client):
 def test_register_patient_success(client):
     res = client.post("/api/v1/auth/register", json={
         "name": "Jane Doe",
-        "email": "jane@test.local",
+        "email": "jane@example.com",
         "password": "Password@123",
         "password_confirm": "Password@123",
         "preferred_language": "en",
         "consent": True,
     })
     assert res.status_code == 201
-    assert res.json()["email"] == "jane@test.local"
+    assert res.json()["email"] == "jane@example.com"
     assert res.json()["role"] == "patient"
     assert "access_token" in res.cookies
 
@@ -91,7 +91,7 @@ def test_register_patient_success(client):
 def test_register_duplicate_email_fails(client):
     res = client.post("/api/v1/auth/register", json={
         "name": "Jane Again",
-        "email": "jane@test.local",
+        "email": "jane@example.com",
         "password": "Password@123",
         "password_confirm": "Password@123",
         "preferred_language": "en",
@@ -102,7 +102,7 @@ def test_register_duplicate_email_fails(client):
 
 def test_login_success_and_logout(client):
     res = client.post("/api/v1/auth/login", json={
-        "email": "patient@test.local",
+        "email": "patient@example.com",
         "password": "Patient@12345",
     })
     assert res.status_code == 200
@@ -111,7 +111,7 @@ def test_login_success_and_logout(client):
     # Access current user info
     me_res = client.get("/api/v1/auth/me")
     assert me_res.status_code == 200
-    assert me_res.json()["email"] == "patient@test.local"
+    assert me_res.json()["email"] == "patient@example.com"
 
     # Logout
     logout_res = client.post("/api/v1/auth/logout")
@@ -127,7 +127,7 @@ def test_anonymous_access_denied(client):
 def test_patient_to_staff_workflow(client):
     # 1. Login as Patient
     login_p = client.post("/api/v1/auth/login", json={
-        "email": "patient@test.local",
+        "email": "patient@example.com",
         "password": "Patient@12345",
     })
     assert login_p.status_code == 200
@@ -152,7 +152,7 @@ def test_patient_to_staff_workflow(client):
 
     # 4. Login as Staff
     login_s = client.post("/api/v1/auth/login", json={
-        "email": "staff@test.local",
+        "email": "staff@example.com",
         "password": "Staff@12345",
     })
     assert login_s.status_code == 200
@@ -184,7 +184,7 @@ def test_patient_to_staff_workflow(client):
 
     # 9. Patient logs back in and views request
     client.post("/api/v1/auth/login", json={
-        "email": "patient@test.local",
+        "email": "patient@example.com",
         "password": "Patient@12345",
     })
     patient_view = client.get(f"/api/v1/assistance-requests/{req_id}")

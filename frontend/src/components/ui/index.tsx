@@ -285,22 +285,26 @@ interface CheckboxProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: string;
 }
 
-export function Checkbox({ label, error, className, id, ...props }: CheckboxProps) {
-  const inputId = id || `cb-${label.toLowerCase().replace(/\s+/g, '-')}`;
-  return (
-    <div className="flex items-start gap-2">
-      <input
-        type="checkbox"
-        id={inputId}
-        className="mt-0.5 h-4 w-4 rounded border-gray-300 text-teal-500 focus:ring-teal-500"
-        {...props}
-      />
-      <div>
-        <label htmlFor={inputId} className={cn('text-sm', error ? 'text-red-700' : 'text-text-primary')}>
-          {label}
-        </label>
-        {error && <p role="alert" className="text-xs text-red-600 mt-0.5">{error}</p>}
+export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
+  function Checkbox({ label, error, className, id, ...props }, ref) {
+    const inputId = id || `cb-${label.toLowerCase().replace(/\s+/g, '-')}`;
+    return (
+      <div className="flex items-start gap-2">
+        <input
+          ref={ref}
+          type="checkbox"
+          id={inputId}
+          className={cn('mt-0.5 h-4 w-4 rounded border-gray-300 text-teal-500 focus:ring-teal-500', className)}
+          {...props}
+        />
+        <div>
+          <label htmlFor={inputId} className={cn('text-sm', error ? 'text-red-700' : 'text-text-primary')}>
+            {label}
+          </label>
+          {error && <p role="alert" className="text-xs text-red-600 mt-0.5">{error}</p>}
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  },
+);
+Checkbox.displayName = 'Checkbox';
